@@ -28,14 +28,15 @@ Base.metadata.create_all(bind=engine)
 @app.route('/api/apps/', methods=['POST'])
 def add_info():
     message = request.json
-    app_id = message["app_id"]
-    if message.get("message"):
-        mes = message.get("message")
-        vardb = appInfo(app_id=app_id, message=mes)
-    else:
-        vardb = appInfo(app_id=app_id)
-    session.add(vardb)
-    session.commit()
+    if message.get("app_id"):
+        app_id = message["app_id"]
+        if message.get("message"):
+            mes = message.get("message")
+            vardb = appInfo(app_id=app_id, message=mes)
+        else:
+            vardb = appInfo(app_id=app_id)
+        session.add(vardb)
+        session.commit()
     return ""
 
 @app.teardown_appcontext
