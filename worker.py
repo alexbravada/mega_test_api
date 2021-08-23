@@ -40,7 +40,7 @@ def check_all_apps(conn):
     Query all app_id in the appInfo table
     """
     error_message_to_admin = set()  # apps that doesn't work correctly
-    minute_responce = 1  # Manually set the number of minutes between check apps status in database
+    minute_responce = 777  # Manually set the number of minutes between check apps status in database
     cur = conn.cursor()
     cur.execute(f"SELECT app_id FROM appInfo GROUP BY app_id HAVING MAX(appInfo.date) < ({time.time()} - {minute_responce} * 60)*1000;")
     rows = cur.fetchall()
@@ -48,7 +48,9 @@ def check_all_apps(conn):
         value = rows[row][0]
         error_message_to_admin.add(value)
     print(error_message_to_admin)
-    mail_to_admin(error_message_to_admin, ['CHANGE_ME@yandex.ru'])  # В List внести почту Яндекса для отправики ошибок
+    if error_message_to_admin:
+        mail_to_admin(error_message_to_admin, ['CHANGE_ME@yandex.ru'])  # В List внести почту Яндекса для отправики ошибок админу.
+        print("SENDING A MESSAGE...")
     return schedule.CancelJob
 
 
